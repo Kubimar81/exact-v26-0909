@@ -11,9 +11,12 @@ Stare `exact-v26` (backup 27.08) zostaje — nic tam nie kasuj.
 
 Potem paczka jest do pobrania z tej strony.
 
-## Poprawka 10.09.2026
+## Poprawki 10.09.2026
 
-Homonim **Deportes**: Santa Cruz ≠ Antofagasta.
+1. Homonim **Deportes**: Santa Cruz ≠ Antofagasta.
+2. Chile Primera B / Colombia Primera B: rożne i strzały celne z Flashscore
+   (API-Football nie ma boxu w tych ligach). Kartki z API zostają.
+
 Szczegóły: [PATCH-10.09.2026.txt](PATCH-10.09.2026.txt)
 
 Paczka ZIP z 09.09 jest w **Releases** (`V26.Liga.zip`).

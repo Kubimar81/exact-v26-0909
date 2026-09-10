@@ -158,6 +158,7 @@ const CLUB_LEAGUE: [string, string][] = [
   ["huachipato", "Chile Primera División"],
   ["colocolo", "Chile Primera División"],
   ["antofagasta", "Chile Primera B"],
+  ["cobreloa", "Chile Primera B"],
   ["ontustyk", "Kazakhstan First League"],
   ["ontustik", "Kazakhstan First League"],
   ["aktobeii", "Kazakhstan First League"],
@@ -381,6 +382,8 @@ const CLUB_LEAGUE: [string, string][] = [
   // Kolumbia Primera B — OCR bukmachera „Columbia” ≠ Chile 266 / Argentyna 131.
   ["yumbo", "Colombia Primera B"],
   ["quindio", "Colombia Primera B"],
+  ["patriotas", "Colombia Primera B"],
+  ["barranquilla", "Colombia Primera B"],
 ];
 
 function clubLeague(name: string): string | null {

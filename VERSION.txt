@@ -1,5 +1,6 @@
 EXACT V26
-Wersja: 10.09.2026 22:40 (V26 Liga)
+Wersja: 10.09.2026 23:10 (V26 Liga)
+- 10.09.2026 23:10 Chile Primera B / Colombia Primera B: API-Football bez boxu (rożne/SOT=0). Program bierze SOT+rożne z Flashscore (liga-de-ascenso / primera-b), min. 2 mecze. Kartki z API zostają. Deportes Recoleta ≠ Antofagasta w średniej. Silnik HOLD.
 - 10.09.2026 22:40 homonim Deportes: Santa Cruz ≠ Antofagasta. Prefiks Deportes/Independiente/Universidad nie skleja klubów w API (rosterNameScore < 40). Search nie pyta samego „Deportes”. K11 hardStops zostaje. Silnik HOLD.
 - 10.09.2026 nazwa w UI: EXACT V26 · V26 Liga.
 - 09.09.2026 15:52 backup V26 Liga.rar / V26 Liga.zip. Silnik HOLD.
