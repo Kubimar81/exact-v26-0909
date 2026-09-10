@@ -1,0 +1,20 @@
+EXACT V26 · V26 Liga — poprawka 10.09.2026
+
+Problem (K11):
+  EPL zablokowane — gospodarz z API (Deportes Santa Cruz)
+  nie zgadza się z Deportes Antofagasta.
+
+Przyczyna:
+  API sklejało kluby po wspólnym słowie „Deportes”
+  (Santa Cruz dostawał 86 pkt i program urywał szukanie
+  zanim sprawdził „Antofagasta”).
+
+Poprawka:
+  Prefiksy Deportes / Independiente / Universidad nie liczą
+  się jako nazwa klubu. Szukanie nie pyta samego „Deportes”.
+  Sitko K11 zostaje — złej pary nadal nie puści.
+
+Pliki:
+  src/lib/v26/api-football.ts
+  src/lib/v26/leagues.ts
+  src/lib/v26/v26-fixes.test.ts
