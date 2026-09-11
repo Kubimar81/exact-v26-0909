@@ -1,30 +1,20 @@
-# EXACT V26 · 09.09.2026
+# EXACT V26 Liga · 11.09.2026
 
-To jest **nowe** repo na paczkę z 9 września 2026.
-Stare `exact-v26` (backup 27.08) zostaje — nic tam nie kasuj.
+Repo na **nową kartę**: **[Kubimar81/exact-v26-1109](https://github.com/Kubimar81/exact-v26-1109)**
 
-## Standard selekcji (11.09.2026)
+Lustrzane (ten sam kod): [exact-v26-0909](https://github.com/Kubimar81/exact-v26-0909)
 
-Dokument operatora: [STANDARD_SELEKCJI.md](STANDARD_SELEKCJI.md)
+Jak odtworzyć program: **[RESTORE.md](RESTORE.md)**
 
-Nadpisany 11.09.2026 10:50 z pliku operatora. Silnik K0–K18 HOLD. 1b OUT. Conf nie tnie listy.
+## Standard 11 września
 
-UI: `src/routes/selekcja.tsx`
+- Selekcja: [STANDARD_SELEKCJI.md](STANDARD_SELEKCJI.md) · UI `/selekcja` · **1B OUT** · Conf nie tnie
+- Pulpit **bez listy dnia** — mecze dodajesz sam (Nowa analiza / skan)
+- Archiwum **2 h po HIT/MISS** — karta zostaje, da się otworzyć
+- Silnik **K0–K18 HOLD** — nie patchować z Tabeli 23 ani Archiwum
 
-## Co wrzucić
+## Co powiedzieć na nowej karcie
 
-1. Menu **…** → **Upload file**
-2. Wybierz `V26 Liga.zip` albo `EXACT_V26.html`
-3. Na dole: **Commit changes**
-
-Potem paczka jest do pobrania z tej strony.
-
-## Poprawki 10.09.2026
-
-1. Homonim **Deportes**: Santa Cruz ≠ Antofagasta.
-2. Chile Primera B / Colombia Primera B: rożne i strzały celne z Flashscore
-   (API-Football nie ma boxu w tych ligach). Kartki z API zostają.
-
-Szczegóły: [PATCH-10.09.2026.txt](PATCH-10.09.2026.txt)
-
-Paczka ZIP z 09.09 jest w **Releases** (`V26.Liga.zip`).
+```
+Przywróć program z GitHuba Kubimar81/exact-v26-1109 — V26 Liga standard 11.09.2026
+```

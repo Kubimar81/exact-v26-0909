@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 import { useEffect, useState } from "react";
 import { Link, useRouterState } from "@tanstack/react-router";
-import { Archive, CalendarDays, ClipboardList, Download, Eye, Filter, GanttChart, Menu, Plus, Table2 } from "lucide-react";
+import { Archive, ClipboardList, Download, Eye, Filter, GanttChart, Menu, Plus, Table2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { loadArchive, pullWnioski } from "@/lib/v26/store";
@@ -10,7 +10,6 @@ import { ReadyChip } from "@/components/boot-ready";
 
 const NAV = [
   { to: "/", label: "Pulpit", icon: GanttChart },
-  { to: "/dzis", label: "Dziś", icon: CalendarDays },
   { to: "/nowa", label: "Nowa analiza", icon: Plus },
   { to: "/standard", label: "Standard V26", icon: ClipboardList },
   { to: "/selekcja", label: "Selekcja", icon: Filter },
@@ -76,7 +75,7 @@ export function AppShell({ children }: { children: ReactNode }) {
         <div className="mt-auto space-y-3 px-2">
           <ReadyChip />
           <p className="text-[11px] leading-relaxed text-subtle">
-            Standard V26-Liga. Zapis w folderze programu. Po 24 h analiza schodzi do Archiwum.
+            Standard V26-Liga. Zapis w folderze programu. 2 h po HIT/MISS analiza schodzi do Archiwum.
             Audyty HIT/MISS — Obserwacja, zanim ruszamy silnik.
           </p>
         </div>

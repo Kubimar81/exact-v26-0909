@@ -39,6 +39,13 @@ Na listę zostają:
 Conf / MIXED / skład nie filtrują wejścia.
 Martwy underdog nie jest warunkiem listy — to warunek kuponu po K18.
 
+## Program (11.09 wieczór)
+
+- Pulpit bez listy dnia i bez szablonów meczów. Operator dodaje kartę sam.
+- Archiwum: 2 h po HIT/MISS, plik zostaje (nie kasujemy).
+- Silnik K0–K18 HOLD.
+
+
 ### Short
 
 Na liście analizy jak 05.09 i 08.09.
