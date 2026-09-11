@@ -1,64 +1,73 @@
 # Standard selekcji meczów — EXACT V26 Liga
 
-Wersja: 11.09.2026 (po audycie 08–10.09 i T23/archiwum od 03.09).
-Silnik K0–K18, CORE, TOP3: **HOLD**. Ten plik zmienia tylko sito operatora.
-1b: **OUT** (09.09 dawało 3:0 / 4:0 / 3:1).
+Wersja: 11.09.2026 wieczór — best-of **05.09 (10 HIT)** + **rano 08.09 (9 HIT)**.
+Silnik K0–K18, CORE, TOP3: **HOLD**. Ten plik to sito operatora, nie patch silnika.
 
-Źródło wzorca: lista 08.09 (9 HIT) + rozliczenie 10.09 + Conf z kart analiz.
+---
+
+## Role
+
+- **Warstwa 1** — skan 100% rynku robi Grok, tylko według tego pliku.
+- **Warstwa 2** — pełne V26 (K0–K18) robisz Ty w programie.
+- **Kupony** — Grok składa 2×2 **tylko gdy poprosisz**. Nie z automatu.
+- Grok nie dopisuje exactów spoza TOP3 karty.
+
+Jedna lista. Bez ósemki vs Watch jako jakości.
 
 ---
 
 ## Warstwa 1 — lista dnia (przed V26)
 
-Jedna lista, bez „jakościowej 8” vs Watch.
-Kolejność analizy, nie ranking jakości:
+Kolejność analizy, nie ranking:
 
 1. **Sitko 1.40–1.75** — najpierw te
-2. **Soft 1.70–2.10**
-3. **Short <1.40** — input, nie kupon
+2. **Soft 1.70–2.10** — druga lista, ten sam lejek
+3. **Short < 1.40** — input, nie sitko kuponu
 
-Warunki wejścia:
-- liga krajowa (nie puchar)
+Na listę idzie mecz gdy:
+
+- liga krajowa (puchar / LM / LE / puchar kraju = OUT)
 - jest faworyt 1X2
 - pasmo kursu jak wyżej
 
-### Pierwsza fala (sitko „najpierw”)
+**Wide > 2.10** — nie z porannej listy.
+Nakładka **1.70–1.75** jest legalna (silnik widzi Soft, lista widzi sitko).
 
-Tylko gdy underdog jest **martwy** (dół tabeli / seria bez gola / 0 pkt).
+### Co ZOSTAJE na liście (praktyka 05.09)
 
-**Nie na pierwszą falę:**
-- faworyt **wyjazdowy** vs żywy gospodarz (Estrela–Braga xG 50/50; Varberg 4. tabeli)
-- Soft away vs żywy dom (Sundsvall 16. miejsce = tak; Varberg = nie)
-- Uganda, Chile, Colombia Primera B (09–10.09: Entebbe / Police 1:1, Antofagasta 0:0, Patriotas 3:1)
-- puchar
+- HV ligi nie wycinają wejścia (Cymru / Parva / Super Liga RS weszły na HIT)
+- faworyt wyjazdowy zostaje na liście (St. Mirren 1:2, Västerås 0:1, Spartak Varna 1:1)
+- short zostaje inputem (Dinamo 1.13, TNS 1.18, Haugesund 1.27, Larne 1.14)
 
-### Short
+### Conf
 
-Na liście analizy jak 08.09 (Larne / Ittihad / Zamalek).
-Nie jako EPL1 z automatu.
+Conf jest na karcie jako informacja.
+**Nie tnie listy. Nie otwiera kuponu.**
+
+Z archiwum 03–09.09: 42/51 HIT < 70. Całe 08.09 (9 HIT) było 45.7–63.8. 05.09 HIT-y schodziły do Conf 26.
+Bez XI program sam stawia Conf 69% / NO EXECUTION — to silnik, nie sito rana.
 
 ---
 
 ## Warstwa 2 — po pełnym V26 K0–K18
 
-Bierzesz **TOP3 z programu**. Nic nie dopisujesz (ani 1:1, ani 2:0, ani 3:0).
-Nie łatamy slotów — to psuje HIT-y 03–08.09 (triplet 1:0 / 2:1 / 2:0).
+Bierzesz **TOP3 z programu**. Nic nie dopisujesz (ani 1:1, ani 2:0, ani 3:0 z palca).
+Nie łatamy slotów — to psuje triplet 1:0 / 2:1 / 2:0 (Larne, Ilves, Zamalek).
 
-**Na kupon:**
-- kształt jak 08.09: **1:0 / 2:1 / 2:0** (dom) albo **0:1 / 1:2 / 1:1** (wyjazd), jeśli program tak wyrzucił
-- underdog martwy
-- nie short
-- 3:0 / 4:0 / 3:1 **nie** jako EPL1
+### Na kupon 2×2 (gdy poprosisz Groka)
 
-Dwa kupony po dwa. Profil Craiova (chaos 3:1 / 2:2 / 0:3) **poza** dwójką.
+Tylko gdy karta sama da CORE **1:0 albo 0:1**.
 
-### Conf
+- kształt bije kurs (Craiova 1.54 + chaos 3:1 = poza dwójką)
+- Soft 1.76–2.10: analiza TAK, dwójka tylko przy czystym CORE 1:0/0:1 (Damac, Västerås)
+- short na kupon tylko gdy karta sama da 1:0 (Larne)
+- `1:1 / 0:0 / 1:2 / 2:1` zostają na rozliczeniu TOP3, nie na 2×2 z automatu
+- `3:0 / 4:0 / 3:1` nie jako EPL1
+- martwy underdog = warunek **kuponu**, nie warunek listy
 
-Conf jest na karcie jako informacja.
-**Nie tnie listy.**
+Dwa kupony po dwa.
 
-Z archiwum analiz 03–09.09: 42/51 HIT < 70. Całe 08.09 (9 HIT) było 45.7–63.8. Bez XI program sam stawia Conf 69% / NO EXECUTION.
-Próg Conf ≥ 70 odrzuciłby listę, która wchodziła.
+HIT rozliczenia = FT w TOP3 (także EPL3). HIT kuponu ≠ HIT modelu.
 
 ---
 
@@ -66,12 +75,14 @@ Próg Conf ≥ 70 odrzuciłby listę, która wchodziła.
 
 - K0–K18
 - wzór Conf
-- układ TOP3
-- DNA 1b (zostaje wyłączone, bez re-on)
-- obowiązkowe 1:1 / 2:0 / 0:2 w TOP3 — **nie wprowadzamy**
+- układ TOP3 / CORE
+- Soft Band silnika 1.70–2.10
+- sitko 1.40–1.75 w guardzie
 
 ---
 
-## Szybki test „08.09”
+## Szybki test dnia
 
-Jeśli lista dnia nie wygląda jak 08.09 (sitko H + Soft A + short input, Veikkausliiga / NIFL / Saudi / Egipt / K League / Estonia), sito jest za ciasne albo za szerokie.
+Lista wygląda jak 05.09 / rano 08.09: sitko H + Soft A + short input.
+Ligi wzorca: Veikkausliiga / NIFL / Saudi / Egipt / K League / Estonia / Parva / Allsvenskan / SCO.
+Jeśli Conf ≥ 70 jest warunkiem wrzutu — sito jest złe.
