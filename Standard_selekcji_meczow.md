@@ -1,57 +1,48 @@
 # Standard selekcji meczów · V26 Liga
-Aktualizacja: 11.09.2026 (audyt HIT 03–10.09). Silnik K0–K18 / TOP3 / CORE — HOLD. 1b wyłączone.
+Aktualizacja: 11.09.2026 (best-of 05.09 + rano 08.09). Silnik K0–K18 / TOP3 / CORE — HOLD.
 
-Wzorzec dnia, który działał: **08.09** (9 HIT). Nie 09.09 (1b → 3:0/4:0).
+Wzorzec: **05.09** (10 HIT) i **rano 08.09** (9 HIT).
+
+---
+
+## Role
+
+Grok = Warstwa 1 (skan). Operator = Warstwa 2 (V26 w programie). Kupony Grok składa tylko na prośbę.
 
 ---
 
 ## Warstwa 1 — lista dnia (przed V26)
 
-Jedna lista, bez „jakościowej 8” i bez Watch jako osobnego sita.
+Jedna lista, bez ósemki vs Watch jako jakość.
 
-Kolejność analizy, nie ranking jakości:
 1. **Sitko 1.40–1.75** — najpierw te
 2. **Soft 1.70–2.10**
-3. **Short <1.40** — input, nie kupon
+3. **Short <1.40** — input, nie sitko kuponu
 
-Warunki wejścia na listę:
-- liga krajowa (puchar OUT)
-- jest faworyt (kurs 1X2)
+Wejście: liga krajowa (puchar OUT), jest faworyt 1X2.
+Wide >2.10 nie z rana. Nakładka 1.70–1.75 legalna.
 
-### Pierwsza fala (sitko „najpierw te”)
-
-Tylko gdy underdog jest **martwy**: dół tabeli / seria bez gola / seria L.
-
-**Nie idzie na pierwszą falę:**
-- faworyt **wyjazdowy** vs żywy gospodarz (Estrela 10.09, Varberg 10.09 — top tabeli, xG 50/50)
-- Soft away vs **żywy** dom (Sundsvall 16. miejsce TAK; Varberg 2./4. miejsce NIE)
-- ligi: **Uganda, Chile, Colombia Primera B** (T23/09–10.09: 0:0, 1:1, 3:1 poza TOP3; Entebbe 09.09 MISS)
-- puchar
-- DNA 1b / Krok 1b (Ettifaq / Qadsiah / Saints / Bolton AND-y) — wyłączone 09.09 wieczorem, nie wraca
+Zostają na liście: HV ligi, faworyt wyjazdowy, short jako input.
+Conf nie filtruje wejścia.
+Martwy underdog = kupon po K18, nie lista rana.
 
 ---
 
 ## Warstwa 2 — dobór po K0–K18
 
-Program liczy CORE, Conf i TOP3. Operator bierze albo odkłada. Nic nie dopisuje do tablicy.
+Bierzesz **TOP3 z silnika**. Nic nie dopisujesz.
 
-**Bierz TOP3 z silnika.** Nie forsuj 1:1 ani 2:0/0:2 ręcznie — T23: wymuszenie slotu wypycha HIT-y 1:0/2:0 (Larne, Ilves, Vila, Zamalek).
+Na dwójkę 2×2: tylko CORE **1:0 / 0:1**.
+1:1 / 0:0 / 1:2 / 2:1 = rozliczenie TOP3, nie forsuj.
+3:0 / 4:0 / 3:1 nie jako EPL1.
+Craiova / chaos poza dwójką.
+Short na kupon tylko gdy karta sama da 1:0.
 
 **Conf jest informacją, nie sitkiem.**
-Z archiwum analiz 03–09.09: **42/51 HIT < 70**. Całe 08.09 (9 HIT) było 45.7–63.8. Bez XI program stawia Conf 69% / NO EXECUTION. Próg ≥70 na kuponie zostawia pustą listę.
-
-**Odkładasz mimo zrobionej analizy:**
-- 3:0 / 3:1 / 4:0 jako EPL1 (to wracało po 1b 09.09)
-- faworyt A vs żywy gospodarz (xG 50/50)
-- Uganda / Chile / Colombia B
-- short na kupon z automatu (short zostaje inputem; na kupon tylko gdy karta sama stawia 1:0 jak Larne)
-
-Dwa kupony po dwa. Profil Craiova poza dwójką.
-
-Przebieg 90+ (Östersund 90+4) to MISS_B — nie łataj silnika.
+Z archiwum 03–09.09: 42/51 HIT < 70. Całe 08.09 było 45.7–63.8.
 
 ---
 
 ## Czego nie ruszamy w programie
 
-Silnik HOLD. K0–K18, K12, TOP3, CORE, Conf (liczba na karcie), sitko 1.40–1.75, guard EPL. Zero patchy pod MISS 10.09.
+Silnik HOLD. K0–K18, TOP3, CORE, Conf (liczba na karcie), sitko 1.40–1.75, Soft Band 1.70–2.10, guard EPL.
