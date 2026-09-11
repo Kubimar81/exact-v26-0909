@@ -3,6 +3,12 @@
 To jest **nowe** repo na paczkę z 9 września 2026.
 Stare `exact-v26` (backup 27.08) zostaje — nic tam nie kasuj.
 
+## Standard selekcji (11.09.2026)
+
+Dokument operatora: [STANDARD_SELEKCJI.md](STANDARD_SELEKCJI.md)
+
+Silnik K0–K18 HOLD. 1b OUT. Conf nie tnie kuponu.
+
 ## Co wrzucić
 
 1. Menu **…** → **Upload file**
