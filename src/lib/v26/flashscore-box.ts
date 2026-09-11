@@ -34,6 +34,15 @@ export function flashscoreLeaguePath(league: string, home?: string, away?: strin
     if (/azerbejd|azerbaij|premyer/.test(n)) return "/football/azerbaijan/premier-league/";
     if (/uzbek/.test(n)) return "/football/uzbekistan/super-league/";
     if (/urugw|uruguay/.test(n)) return "/football/uruguay/liga-auf-uruguaya/";
+    if (/ykkonen|ykkos/.test(n)) return "/football/finland/ykkosliiga/";
+    if (/\bfnl\b/.test(n) || ((/czech|czechy|czechia/.test(n)) && /2\.?\s*(liga|league)/.test(n))) {
+      return "/football/czech-republic/fnl/";
+    }
+    if (/challenge league/.test(n)) return "/football/switzerland/challenge-league/";
+    if (/\bi liga\b|fortuna 1 liga/.test(n) && !/rumun|romania/.test(n)) return "/football/poland/division-1/";
+    if (/v[- ]?league|wietnam|\bvietnam\b/.test(n)) return "/football/vietnam/v-league-1/";
+    if (/thai league|tajland|\bthailand\b/.test(n)) return "/football/thailand/thai-league/";
+    if (/singapur|\bsingapore\b/.test(n)) return "/football/singapore/premier-league/";
     if (/meistriliiga|premium liiga|\bestoni/.test(n)) return "/football/estonia/meistriliiga/";
     if (/chile.*primera b|primera b.*chile|chile.*ascenso/.test(n)) return "/football/chile/liga-de-ascenso/";
     if (/(colombia|kolumb).*primera b|primera b.*(colombia|kolumb)|torneo betplay/.test(n)) return "/football/colombia/primera-b/";
@@ -188,8 +197,18 @@ export async function fetchFlashscoreSetPieces(
   const events = parseFlashscoreEvents(html);
   if (!events.filter((e) => e.finished).length) return null;
 
-  async function sideAvg(wanted: string): Promise<{ sot: number; cor: number; cards: number }> {
-    const rows = teamEvents(events, wanted).slice(0, 8);
+  async function sideAvg(wantedList: string[]): Promise<{ sot: number; cor: number; cards: number }> {
+    let rows: FsEvent[] = [];
+    let hitName = wantedList[0] || "";
+    for (const wanted of wantedList) {
+      if (!wanted) continue;
+      const found = teamEvents(events, wanted);
+      if (found.length >= 2) {
+        rows = found.slice(0, 8);
+        hitName = wanted;
+        break;
+      }
+    }
     if (rows.length < 2) return { sot: 0, cor: 0, cards: 0 };
     const packs = await Promise.all(
       rows.map((r) => fsGet(`${FEED}/df_st_1_${r.id}`, { "X-Fsign": fsign })),
@@ -200,7 +219,7 @@ export async function fetchFlashscoreSetPieces(
     for (let i = 0; i < rows.length; i++) {
       const box = packs[i] ? parseFlashscoreMatchStats(packs[i] as string) : null;
       if (!box) continue;
-      const home = statsClubHit(rows[i].home, wanted);
+      const home = statsClubHit(rows[i].home, hitName);
       if (box.hasSot) sots.push(home ? box.sotH : box.sotA);
       if (box.hasCor) cors.push(home ? box.corH : box.corA);
       if (box.hasCards) cards.push((home ? box.yelH : box.yelA) + (home ? box.redH : box.redA));
@@ -208,9 +227,11 @@ export async function fetchFlashscoreSetPieces(
     return { sot: avgSide(sots), cor: avgSide(cors), cards: avgSide(cards) };
   }
 
+  const homeNames = [...new Set([input.home, base.home?.name].filter((s): s is string => Boolean(s)))];
+  const awayNames = [...new Set([input.away, base.away?.name].filter((s): s is string => Boolean(s)))];
   const [hAvg, aAvg] = await Promise.all([
-    homeNeed || cardsNeed ? sideAvg(input.home) : Promise.resolve({ sot: 0, cor: 0, cards: 0 }),
-    awayNeed || cardsNeed ? sideAvg(input.away) : Promise.resolve({ sot: 0, cor: 0, cards: 0 }),
+    homeNeed || cardsNeed ? sideAvg(homeNames) : Promise.resolve({ sot: 0, cor: 0, cards: 0 }),
+    awayNeed || cardsNeed ? sideAvg(awayNames) : Promise.resolve({ sot: 0, cor: 0, cards: 0 }),
   ]);
 
   const home: Record<string, number> = {};

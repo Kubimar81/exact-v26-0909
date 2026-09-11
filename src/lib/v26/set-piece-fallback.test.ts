@@ -258,6 +258,27 @@ describe("set-piece fallback — tylko luka, bez zgadywania", () => {
     assert.equal(sparseBoxLeague("Kolumbia - Primera B"), true);
     assert.equal(sparseBoxLeague("Colombia Primera A"), false);
     assert.equal(sparseBoxLeague("Colombia Primera A", "Patriotas Boyaca", "Barranquilla FC"), true);
+    assert.equal(sparseBoxLeague("Ykkönen"), true);
+    assert.equal(sparseBoxLeague("Czech FNL"), true);
+    assert.equal(sparseBoxLeague("Czechy - FNL"), true);
+    assert.equal(sparseBoxLeague("Swiss Challenge League"), true);
+    assert.equal(sparseBoxLeague("Szwajcaria - Challenge League"), true);
+    assert.equal(sparseBoxLeague("Veikkausliiga"), false);
+    assert.equal(sparseBoxLeague("Swiss Super League"), false);
+    assert.equal(sparseBoxLeague("Czech First League"), false);
+    assert.equal(sparseBoxLeague("I Liga"), true);
+    assert.equal(sparseBoxLeague("Ekstraklasa"), false);
+    assert.equal(sparseBoxLeague("Ekstraklasa", "Polonia Warszawa", "Polonia Bytom"), true);
+    assert.equal(sparseBoxLeague("V-League"), true);
+    assert.equal(sparseBoxLeague("Wietnam - V-League 1"), true);
+    assert.equal(sparseBoxLeague("Thai League 1"), true);
+    assert.equal(sparseBoxLeague("Tajlandia - Thai League 1"), true);
+    assert.equal(sparseBoxLeague("Singapore Premier League"), true);
+    assert.equal(sparseBoxLeague("Premier League"), false);
+    assert.equal(sparseBoxLeague("Premier League", "Tampines Rovers", "Balestier Khalsa"), true);
+  });
+
+  it("statsClubHit Chile/Uzbek/Estonia", () => {
     assert.ok(statsClubHit("Antofagasta", "Deportes Antofagasta"));
     assert.ok(statsClubHit("Cobreloa", "Cobreloa Calama"));
     assert.ok(statsClubHit("Patriotas", "Patriotas Boyaca"));

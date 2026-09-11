@@ -93,6 +93,7 @@ export function isUgoPlusLeague(league: string): boolean {
 
 export function isVeikkausliiga(league: string): boolean {
   const n = norm(league);
+  if (/ykkonen|ykkos/.test(n)) return false;
   return n.includes("veikkaus") || n.includes("finland");
 }
 
@@ -357,6 +358,20 @@ const CLUB_LEAGUE: [string, string][] = [
   ["pancevo", "Serbia Super Liga"],
   ["zeleznicarpancevo", "Serbia Super Liga"],
   ["backatopola", "Serbia Super Liga"],
+  ["taborsko", "Czech FNL"],
+  ["vlasim", "Czech FNL"],
+  ["silon", "Czech FNL"],
+  ["trinec", "Czech FNL"],
+  ["kladno", "Czech FNL"],
+  ["fcjazz", "Ykkönen"],
+  ["jazz", "Ykkönen"],
+  ["kpv", "Ykkönen"],
+  ["kokkola", "Ykkönen"],
+  ["lausanneouchy", "Swiss Challenge League"],
+  ["stadelausanne", "Swiss Challenge League"],
+  ["fcwil", "Swiss Challenge League"],
+  ["wil1900", "Swiss Challenge League"],
+  ["wil", "Swiss Challenge League"],
   // Mizoram Premier League (Indie, 5. poziom) — OCR „Premier League” ≠ EPL.
   // Tokeny unikalne; nie: mls / police / kanan / aizawl (homonimy ISL/I-League/MLS).
   ["mizoram", "Mizoram Premier League"],
@@ -384,6 +399,20 @@ const CLUB_LEAGUE: [string, string][] = [
   ["quindio", "Colombia Primera B"],
   ["patriotas", "Colombia Primera B"],
   ["barranquilla", "Colombia Primera B"],
+  // Wietnam / Tajlandia / Singapur — OCR „Premier League” ≠ EPL 39.
+  ["ninhbinh", "V-League"],
+  ["thanhhoa", "V-League"],
+  ["thanhoa", "V-League"],
+  ["lamphun", "Thai League 1"],
+  ["buriram", "Thai League 1"],
+  ["muangthong", "Thai League 1"],
+  ["portfc", "Thai League 1"],
+  ["tampines", "Singapore Premier League"],
+  ["balestier", "Singapore Premier League"],
+  ["khalsa", "Singapore Premier League"],
+  ["poloniawarszawa", "I Liga"],
+  ["poloniabytom", "I Liga"],
+  ["bytom", "I Liga"],
 ];
 
 function clubLeague(name: string): string | null {
@@ -472,6 +501,8 @@ export const CITY_EXONYMS: Record<string, string> = {
   florencja: "firenze",
   lyonnais: "lyon",
   wolves: "wolverhampton",
+  praga: "praha",
+  bukareszt: "bucuresti",
 };
 
 export function applyCityExonyms(s: string): string {
@@ -483,6 +514,18 @@ export function applyCityExonyms(s: string): string {
 }
 
 const CLUB_STOP = new Set(["fc", "sc", "ac", "afc", "cf", "if", "ff", "fk", "fa", "bk", "sk", "club", "the", "de", "al", "el", "baku", "sofia", "r", "ii", "iii", "res", "reserve", "reserves", "olympique", "deportes", "deporte", "independiente", "universidad"]);
+
+/** 1948 rozdziela CSKA 1948 od CSKA. Rok założenia (1900, 1912, 1961) nie jest rozróżnikiem. */
+const DISTINGUISH_YEARS = new Set(["1948"]);
+
+export function clubYearConflict(found: string, wanted: string): boolean {
+  const years = (s: string) => s.match(/\b(19|20)\d{2}\b/g) || [];
+  const ya = years(found);
+  const yb = years(wanted);
+  if (ya.join() === yb.join()) return false;
+  if (ya.length && yb.length) return true;
+  return [...ya, ...yb].some((y) => DISTINGUISH_YEARS.has(y));
+}
 
 function tokenDist(a: string, b: string): number {
   if (a === b) return 0;
@@ -521,6 +564,7 @@ export function clubNameMatches(found: string, wanted: string): boolean {
   const a = ocr(applyCityExonyms(fold(found).replace(/[^a-z0-9]+/g, " ").trim()));
   const b = ocr(applyCityExonyms(fold(wanted).replace(/[^a-z0-9]+/g, " ").trim()));
   if (!a || !b) return false;
+  if (clubYearConflict(found, wanted)) return false;
   const isQpr = (s: string) => {
     const c = s.replace(/\s+/g, "");
     if (c === "qpr") return true;
@@ -551,10 +595,6 @@ export function clubNameMatches(found: string, wanted: string): boolean {
   const tokens = (s: string) => new Set(s.split(" ").filter((t) => t.length >= 3 && !CLUB_STOP.has(t)));
   const ta = tokens(a);
   const tb = tokens(b);
-  const years = (s: Set<string>) => [...s].filter((t) => /^(19|20)\d{2}$/.test(t));
-  const ya = years(ta);
-  const yb = years(tb);
-  if (ya.join() !== yb.join()) return false;
   if (!ta.size || !tb.size) {
     const stripped = (s: string) => s.split(" ").filter((t) => !CLUB_STOP.has(t)).join(" ");
     return stripped(a) === stripped(b) && stripped(a).length >= 4;
@@ -645,6 +685,10 @@ export function matchLeague(raw: string): string {
   if (/\bcalcutt|\bkolkata|\bcfl\b/.test(n)) return "Calcutta Premier Division";
   if (/\bmizoram\b|lawngtlai|lawtngtlai/.test(n)) return "Mizoram Premier League";
   if (/\begipt\b|\begypt\b|\begyptian\b/.test(n)) return "Egyptian Premier League";
+  if (/wietnam|\bvietnam\b|v[- ]?league/.test(n)) return "V-League";
+  if (/tajland|\bthailand\b|thai league/.test(n)) return "Thai League 1";
+  if (/singapur|\bsingapore\b/.test(n)) return "Singapore Premier League";
+  if (/(^|\s)i liga(\s|$)|fortuna 1 liga/.test(n) && !/rumun|romania/.test(n)) return "I Liga";
   if (/\bnifl\b|northern ireland|irlandia polnoc|polnocn\w* irland/.test(n)) return "NIFL Premiership";
   if (/\bsuperettan\b/.test(n)) return "Superettan";
   if (/\brumun|\bromania\b/.test(n)) return "Liga I Romania";
@@ -664,6 +708,10 @@ export function matchLeague(raw: string): string {
   if (/uzbek/.test(n)) return "Uzbekistan Super League";
   if (/urugw|uruguay/.test(n)) return "Uruguay Primera División";
   if (/\bserb/.test(n) && /super|liga/.test(n)) return "Serbia Super Liga";
+  if (/\bfnl\b|chl[- ]?fnl/.test(n)) return "Czech FNL";
+  if (/challenge league/.test(n)) return "Swiss Challenge League";
+  if (/ykkonen|ykkosliiga|ykkos[- ]?liiga/.test(n)) return "Ykkönen";
+  if (/veikkaus/.test(n)) return "Veikkausliiga";
   if (/laliga\s*2|la liga 2|laliga2/.test(n)) return "Segunda División";
   if (/segunda/.test(n) && /(hiszpan|spain|laliga|la liga)/.test(n)) return "Segunda División";
   if (/\bkazachstan|\bkazakhstan\b/.test(n)) {
@@ -688,6 +736,7 @@ export function matchLeague(raw: string): string {
   if (/(argentyn|argentina)/.test(n)) return "Liga Profesional Argentina";
   if (/(norweg|norway)/.test(n) && /1\.?\s*division/.test(n)) return "1. Division Norway";
   if (/\bobos[- ]?liga/.test(n)) return "1. Division Norway";
+  if (/\bszkoc|\bscotland\b/.test(n) && /championship/.test(n)) return "Scottish Championship";
   if (/\bszkoc|\bscotland\b/.test(n)) return "Scottish Premiership";
   if (/\bpremiership\b/.test(n) && !/north|irland|ireland|\bnifl\b/.test(n)) return "Scottish Premiership";
   if (/(turcj|turkey|turkiye|türkiye)/.test(n) && /1\.?\s*lig/.test(n) && !/super|süper/.test(n)) return "TFF 1. Lig";
@@ -697,6 +746,9 @@ export function matchLeague(raw: string): string {
     if (n === ln) return true;
     if (ln === "super lig" && /super\s*liga/.test(n) && !/turc|turkey/.test(n)) return false;
     if (ln === "swiss super league" && !/swiss|szwajc|switzerland/.test(n)) return false;
+    if (ln === "singapore premier league" && !/singapur|singapore/.test(n)) return false;
+    if (ln === "thai league 1" && !/thai|tajland/.test(n)) return false;
+    if (ln === "v-league" && !/wietnam|vietnam|v[- ]?league/.test(n)) return false;
     if (ln === "super league greece" && !/grec|greece/.test(n)) return false;
     if (ln === "chile primera division" && !/chile/.test(n)) return false;
     if (ln.length >= 6 && n.includes(ln)) return true;
@@ -794,6 +846,22 @@ export function matchLeague(raw: string): string {
     ["urugwaj", "Uruguay Primera División"],
     ["uruguay", "Uruguay Primera División"],
     ["serbia", "Serbia Super Liga"],
+    ["fnl", "Czech FNL"],
+    ["challenge league", "Swiss Challenge League"],
+    ["ykkonen", "Ykkönen"],
+    ["ykkosliiga", "Ykkönen"],
+    ["veikkausliiga", "Veikkausliiga"],
+    ["wietnam", "V-League"],
+    ["vietnam", "V-League"],
+    ["v-league", "V-League"],
+    ["v league", "V-League"],
+    ["tajland", "Thai League 1"],
+    ["thailand", "Thai League 1"],
+    ["thai league", "Thai League 1"],
+    ["singapur", "Singapore Premier League"],
+    ["singapore", "Singapore Premier League"],
+    ["i liga", "I Liga"],
+    ["fortuna 1 liga", "I Liga"],
   ];
   const alias = aliases.find(([k]) => n.includes(k));
   return alias ? alias[1] : raw.trim();
@@ -801,6 +869,7 @@ export function matchLeague(raw: string): string {
 
 export const LEAGUES = [
   "Ekstraklasa",
+  "I Liga",
   "Premier League",
   "LaLiga",
   "Serie A",
@@ -817,13 +886,17 @@ export const LEAGUES = [
   "Superettan",
   "Eliteserien",
   "Veikkausliiga",
+  "Ykkönen",
   "Superliga Denmark",
   "1. Division Denmark",
   "Czech First League",
+  "Czech FNL",
   "Austrian Bundesliga",
   "Swiss Super League",
+  "Swiss Challenge League",
   "Belgian Pro League",
   "Championship",
+  "Scottish Championship",
   "2. Bundesliga",
   "Serie B",
   "Ligue 2",
@@ -840,6 +913,9 @@ export const LEAGUES = [
   "Saudi Pro League",
   "Botola Pro",
   "Egyptian Premier League",
+  "V-League",
+  "Thai League 1",
+  "Singapore Premier League",
   "Tunisian Ligue 1",
   "Uzbekistan Super League",
   "Uruguay Primera División",

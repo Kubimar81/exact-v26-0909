@@ -3359,3 +3359,112 @@ describe("V26 08.09 slot remisu 1:1 + BTTS TAK surest", () => {
   });
 });
 
+describe("11.09 matching — Praga/Bukareszt/Wil + FNL/Challenge/Ykkönen", () => {
+  it("egzonimy i rok założenia: Dukla Praga, Dinamo Bukareszt, FC Wil 1900", () => {
+    assert.ok(clubNameMatches("Dukla Praha", "Dukla Praga"));
+    assert.ok(clubNameMatches("Dukla Praha", "Dukla Praga"));
+    assert.ok(clubNameMatches("Dinamo Bucuresti", "Dinamo Bukareszt"));
+    assert.ok(clubNameMatches("FC Wil 1900", "Wil"));
+    assert.ok(clubNameMatches("Vlašim", "Vlasim"));
+    assert.ok(clubNameMatches("Csikszereda", "Csikszereda Miercurea Ciuc"));
+    assert.equal(clubNameMatches("CSKA Sofia", "CSKA 1948 Sofia"), false, "1948 zostaje rozróżnikiem");
+    assert.ok(rosterNameScore("FC Wil 1900", "Wil") >= 45);
+    assert.ok(rosterNameScore("Dukla Praha", "Dukla Praga") >= 45);
+    assert.ok(rosterNameScore("Dinamo Bucuresti", "Dinamo Bukareszt") >= 45);
+    assert.ok(rosterNameScore("Silon Táborsko", "Taborsko") >= 45);
+    const duklaStops = hardStops(
+      payload({ home: team({ name: "Dukla Praha" }), away: team({ name: "Vlašim" }) }),
+      { home: "Dukla Praga", away: "Vlasim", league: "Czech FNL", kickoff: "2026-09-11T16:00:00", oddsHome: 1.77, oddsDraw: 3.6, oddsAway: 3.9 },
+    );
+    assert.ok(!duklaStops.some((x) => /nie zgadza/.test(x)), duklaStops.join("; "));
+    const dinamoStops = hardStops(
+      payload({ home: team({ name: "Csikszereda" }), away: team({ name: "Dinamo Bucuresti" }) }),
+      {
+        home: "Csikszereda Miercurea Ciuc",
+        away: "Dinamo Bukareszt",
+        league: "Liga I Romania",
+        kickoff: "2026-09-11T18:00:00",
+        oddsHome: 5.5,
+        oddsDraw: 3.85,
+        oddsAway: 1.56,
+      },
+    );
+    assert.ok(!dinamoStops.some((x) => /nie zgadza/.test(x)), dinamoStops.join("; "));
+  });
+
+  it("Czechy FNL / Challenge League / Ykkönen nie spadają na 1. ligę", () => {
+    assert.equal(matchLeague("Czechy - FNL"), "Czech FNL");
+    assert.equal(matchLeague("Czechy - FNL · Ze screena (bukmacher): Dziś, 17:00"), "Czech FNL");
+    assert.equal(matchLeague("Szwajcaria - Challenge League"), "Swiss Challenge League");
+    assert.equal(matchLeague("Szwajcaria - Challenge League · Ze screena (bukmacher): Dziś, 19:30"), "Swiss Challenge League");
+    assert.equal(matchLeague("Ykkönen"), "Ykkönen");
+    assert.equal(matchLeague("Finlandia - Ykkösliiga"), "Ykkönen");
+    assert.equal(matchLeague("Veikkausliiga"), "Veikkausliiga");
+    assert.equal(matchLeague("Swiss Super League"), "Swiss Super League");
+    assert.equal(leagueIdFromHint("Czechy - FNL"), 346);
+    assert.equal(leagueIdFromHint("Czech First League"), 345);
+    assert.equal(leagueIdFromHint("Szwajcaria - Challenge League"), 208);
+    assert.equal(leagueIdFromHint("Swiss Super League"), 207);
+    assert.equal(leagueIdFromHint("Ykkönen"), 245);
+    assert.equal(leagueIdFromHint("Finlandia - Ykkösliiga"), 245);
+    assert.equal(leagueIdFromHint("Veikkausliiga"), 244);
+    assert.ok(LEAGUES.includes("Czech FNL"));
+    assert.ok(LEAGUES.includes("Swiss Challenge League"));
+    assert.ok(LEAGUES.includes("Ykkönen"));
+    assert.deepEqual(SIBLING_LEAGUES[207], [208]);
+    assert.deepEqual(SIBLING_LEAGUES[345], [346]);
+    assert.deepEqual(SIBLING_LEAGUES[244], [245]);
+    assert.ok(SIBLING_LEAGUES[179].includes(180));
+  });
+
+  it("kluby nadpisują złą ligę z kuponu: Jazz/KPV → Ykkönen, Wil → Challenge", () => {
+    assert.equal(resolveLeague("FC Jazz", "KPV Kokkola", "Veikkausliiga"), "Ykkönen");
+    assert.equal(resolveLeague("Lausanne Ouchy", "Wil", "Swiss Super League"), "Swiss Challenge League");
+    assert.equal(resolveLeague("Lausanne Ouchy", "Wil", "Szwajcaria - Challenge League"), "Swiss Challenge League");
+    assert.equal(resolveLeague("Taborsko", "SK Kladno", "Czechy - FNL"), "Czech FNL");
+    assert.equal(resolveLeague("Dukla Praga", "Vlasim", "Czechy - FNL"), "Czech FNL");
+    assert.equal(leagueIdFromHint(resolveLeague("FC Jazz", "KPV Kokkola", "Veikkausliiga")), 245);
+    assert.equal(leagueIdFromHint(resolveLeague("Lausanne Ouchy", "Wil", "Szwajcaria - Challenge League")), 208);
+    assert.equal(leagueHintFromClubs("FC Jazz", "KPV Kokkola"), "Ykkönen");
+    assert.equal(leagueHintFromClubs("Lausanne Ouchy", "Wil"), "Swiss Challenge League");
+  });
+
+  it("Wietnam / Tajlandia / Singapur / I Liga — nie EPL 39 i nie timeout ligi", () => {
+    assert.equal(matchLeague("Wietnam - V-League 1"), "V-League");
+    assert.equal(matchLeague("Wietnam - V-League 1 · Ze screena (bukmacher): Dziś, 13:00"), "V-League");
+    assert.equal(matchLeague("Tajlandia - Thai League 1"), "Thai League 1");
+    assert.equal(matchLeague("Tajlandia - Thai League 1 · Ze screena (bukmacher): Dziś, 13:30"), "Thai League 1");
+    assert.equal(matchLeague("Singapore Premier League"), "Singapore Premier League");
+    assert.equal(matchLeague("I Liga"), "I Liga");
+    assert.equal(matchLeague("Premier League"), "Premier League");
+    assert.equal(leagueIdFromHint("Wietnam - V-League 1"), 340);
+    assert.equal(leagueIdFromHint("V-League"), 340);
+    assert.equal(leagueIdFromHint("Wietnam - V-League 1 · Ze screena (bukmacher): Dziś, 13:00"), 340);
+    assert.equal(leagueIdFromHint("Tajlandia - Thai League 1"), 296);
+    assert.equal(leagueIdFromHint("Thai League 1"), 296);
+    assert.equal(leagueIdFromHint("Tajlandia - Thai League 1 · Ze screena (bukmacher): Dziś, 13:30"), 296);
+    assert.equal(leagueIdFromHint("Singapore Premier League"), 368);
+    assert.equal(leagueIdFromHint("Premier League"), 39);
+    assert.equal(leagueIdFromHint("I Liga"), 107);
+    assert.equal(resolveLeague("Ninh Binh", "Dong A Thanh Hoa", "Wietnam - V-League 1"), "V-League");
+    assert.equal(resolveLeague("Port FC", "Lamphun Warrior", "Tajlandia - Thai League 1"), "Thai League 1");
+    assert.equal(resolveLeague("Tampines Rovers", "Balestier Khalsa", "Premier League"), "Singapore Premier League");
+    assert.equal(resolveLeague("Tampines Rovers", "Balestier Khalsa", "Ekstraklasa"), "Singapore Premier League");
+    assert.equal(resolveLeague("Polonia Warszawa", "Polonia Bytom", "Ekstraklasa"), "I Liga");
+    assert.equal(resolveLeague("Arsenal", "Chelsea", "Premier League"), "Premier League");
+    assert.equal(leagueIdFromHint(resolveLeague("Tampines Rovers", "Balestier Khalsa", "Premier League")), 368);
+    assert.equal(leagueIdFromHint(resolveLeague("Polonia Warszawa", "Polonia Bytom", "Ekstraklasa")), 107);
+    assert.equal(leagueHintFromClubs("Tampines Rovers", "Balestier Khalsa"), "Singapore Premier League");
+    assert.equal(leagueHintFromClubs("Polonia Warszawa", "Polonia Bytom"), "I Liga");
+    assert.equal(leagueHintFromClubs("Ninh Binh", "Dong A Thanh Hoa"), "V-League");
+    assert.ok(rosterNameScore("Tampines Rovers", "Tampines Rovers") >= 45);
+    assert.ok(rosterNameScore("Lamphun Warrior", "Lamphun Warrior") >= 45);
+    assert.ok(clubNameMatches("Thanh Hoa", "Dong A Thanh Hoa"));
+    assert.ok(clubNameMatches("Polonia Warszawa", "Polonia Warszawa"));
+    assert.ok(LEAGUES.includes("V-League"));
+    assert.ok(LEAGUES.includes("Thai League 1"));
+    assert.ok(LEAGUES.includes("Singapore Premier League"));
+    assert.ok(LEAGUES.includes("I Liga"));
+  });
+});
+

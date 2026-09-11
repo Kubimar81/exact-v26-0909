@@ -3,7 +3,7 @@
  * Klucz: process.env.API_FOOTBALL_KEY (nie pakować do ZIP/RAR).
  */
 
-import { applyCityExonyms, resolveLeague, leagueHintFromClubs } from "./leagues";
+import { applyCityExonyms, resolveLeague, leagueHintFromClubs, clubYearConflict } from "./leagues";
 import { fetchFotmobH2h, fetchFotmobLineups, fetchFotmobFt, mergeH2h } from "./fotmob-box";
 import { sparseBoxLeague } from "./set-piece-fallback";
 import { classifyOppQuality } from "./set-piece-class";
@@ -153,10 +153,7 @@ const CLUB_NOISE =
   /\b(fc|sc|ac|afc|cf|if|ff|fk|fa|bk|sk|as|ss|us|cd|rcd|r|ii|iii|club|the|de|al|el|baku|sofia|deportes|deporte|independiente|universidad|reserves?|res|u1[5-9]|u2[0-3]|olympique)\b/g;
 
 function yearMismatch(a: string, b: string): boolean {
-  const ya = a.match(/\b(19|20)\d{2}\b/g) || [];
-  const yb = b.match(/\b(19|20)\d{2}\b/g) || [];
-  if (!ya.length && !yb.length) return false;
-  return ya.join() !== yb.join();
+  return clubYearConflict(a, b);
 }
 
 function clubCore(name: string): string {
@@ -261,7 +258,7 @@ function countryBoost(country: string | undefined, leagueHint?: string): number 
   const h = leagueHint.toLowerCase();
   const pairs: [RegExp, RegExp][] = [
     [/nether|holland/i, /eredivisie|eerste|holland|nether|holand/i],
-    [/poland/i, /ekstraklasa|poland|polsk/i],
+    [/poland/i, /ekstraklasa|i liga|poland|polsk/i],
     [/sweden/i, /allsven|superettan|sweden|szwec/i],
     [/romania/i, /liga i|liga 1|superliga|romania|rumun/i],
     [/denmark/i, /superliga|1\.?\s*division|denmark|dania/i],
@@ -280,10 +277,10 @@ function countryBoost(country: string | undefined, leagueHint?: string): number 
     [/turkey/i, /super lig|süper|turkey|turcj|tff/i],
     [/greece/i, /greece|grecj|super league greece/i],
     [/austria/i, /bundesliga|austria/i],
-    [/switzerland/i, /swiss|switzerland|szwajc/i],
-    [/czech/i, /first league|fortuna liga|czech|czech/i],
-    [/scotland/i, /premiership|scotland|szkoc/i],
-    [/finland/i, /veikkaus|finland|finlan/i],
+    [/switzerland/i, /swiss|switzerland|szwajc|challenge/i],
+    [/czech/i, /first league|fortuna liga|czech|fnl/i],
+    [/scotland/i, /premiership|championship|scotland|szkoc/i],
+    [/finland/i, /veikkaus|ykkonen|ykkos|finland|finlan/i],
     [/india/i, /calcutta|kolkata|i-league|isl|india|indie|mizoram/i],
     [/chile/i, /chile/i],
     [/colombia/i, /colombia|columbia|kolumbi|primera b|betplay/i],
@@ -299,6 +296,9 @@ function countryBoost(country: string | undefined, leagueHint?: string): number 
     [/uzbekistan/i, /uzbek|super league/i],
     [/uruguay/i, /urugw|uruguay/i],
     [/serbia/i, /serb|super liga/i],
+    [/vietnam/i, /wietnam|vietnam|v[- ]?league/i],
+    [/thailand/i, /tajland|thailand|thai league/i],
+    [/singapore/i, /singapur|singapore/i],
   ];
   for (const [countryRe, leagueRe] of pairs) {
     if (countryRe.test(c) && leagueRe.test(h)) return 12;
@@ -495,9 +495,41 @@ const TEAM_ALIASES: Record<string, string> = {
   "bursaspor": "Bursaspor",
   "istanbulspor": "İstanbulspor",
   "istanbul spor": "İstanbulspor",
+  wil: "FC Wil 1900",
+  "fc wil": "FC Wil 1900",
+  "fc wil 1900": "FC Wil 1900",
+  "lausanne ouchy": "Stade Lausanne-Ouchy",
+  "stade lausanne ouchy": "Stade Lausanne-Ouchy",
+  "dukla praga": "Dukla Praha",
+  "dinamo bukareszt": "Dinamo Bucuresti",
+  taborsko: "Silon Taborsko",
+  "silon taborsko": "Silon Taborsko",
+  vlasim: "Vlasim",
+  "fc vlasim": "Vlasim",
+  "sk kladno": "Kladno",
+  "fc jazz": "Jazz",
+  jazz: "Jazz",
+  "kpv kokkola": "KPV",
+  kpv: "KPV",
+  "ninh binh": "Ninh Binh",
+  ninhbinh: "Ninh Binh",
+  "dong a thanh hoa": "Thanh Hoa",
+  "thanh hoa": "Thanh Hoa",
+  thanhhoa: "Thanh Hoa",
+  "lamphun warrior": "Lamphun Warrior",
+  lamphun: "Lamphun Warrior",
+  "port fc": "Port FC",
+  portfc: "Port FC",
+  "tampines rovers": "Tampines Rovers",
+  tampines: "Tampines Rovers",
+  "balestier khalsa": "Balestier Khalsa",
+  balestier: "Balestier Khalsa",
+  "polonia warszawa": "Polonia Warszawa",
+  "polonia bytom": "Polonia Bytom",
 };
 
 function isWeakSearchQuery(q: string): boolean {
+  if (TEAM_ALIASES[norm(q)]) return false;
   const toks = norm(q)
     .replace(/\b(fc|sc|cd|ac|afc|cf|de|el|al)\b/g, " ")
     .split(" ")
@@ -741,6 +773,7 @@ const LEAGUE_CATALOG: { test: RegExp; id: number }[] = [
   { test: /s[uü]per[- ]?lig(?!a)/, id: 203 },
   { test: /turcja|turkey|turkiye|t[uü]rkiye/, id: 203 },
   { test: /\bnifl\b|northern ireland/, id: 408 },
+  { test: /(szkoc|scotland).*championship|championship.*(szkoc|scotland)/, id: 180 },
   { test: /szkoc|scotland|premiership/, id: 179 },
   { test: /eredivisie|holandia|netherlands|holland/, id: 88 },
   { test: /eerste divisie|keuken kampioen/, id: 89 },
@@ -749,6 +782,9 @@ const LEAGUE_CATALOG: { test: RegExp; id: number }[] = [
   { test: /(polska|poland|ekstraklasa).*(i\s*liga|1\.?\s*liga)|(^|\s)i liga(\s|$)|fortuna 1 liga/, id: 107 },
   { test: /ekstraklasa|poland|polska/, id: 106 },
   { test: /egipt|\begypt\b|\begyptian\b/, id: 233 },
+  { test: /wietnam|\bvietnam\b|v[- ]?league/, id: 340 },
+  { test: /tajland|\bthailand\b|thai league/, id: 296 },
+  { test: /singapur|\bsingapore\b/, id: 368 },
   { test: /premier league|\bepl\b/, id: 39 },
   { test: /championship/, id: 40 },
   { test: /laliga\s*2|la liga 2|segunda division/, id: 141 },
@@ -763,12 +799,16 @@ const LEAGUE_CATALOG: { test: RegExp; id: number }[] = [
   { test: /super league greece|grecja|greece/, id: 197 },
   { test: /(norweg|norway).*(1\.?\s*division)|obos[- ]?liga/, id: 104 },
   { test: /eliteserien|norway|norweg/, id: 103 },
-  { test: /veikkaus|finland/, id: 244 },
   { test: /(dania|denmark).*(1\.?\s*division)|1\.?\s*division.*(dania|denmark)/, id: 120 },
   { test: /superliga denmark|dania|denmark/, id: 119 },
   { test: /belgian|jupiler|belgium|belg/, id: 144 },
+  { test: /challenge league/, id: 208 },
   { test: /swiss super|switzerland|szwajc/, id: 207 },
+  { test: /\bfnl\b|chl[- ]?fnl/, id: 346 },
   { test: /czech|czechia|czechy|fortuna liga/, id: 345 },
+  { test: /ykkonen|ykkosliiga|ykkos/, id: 245 },
+  { test: /veikkaus/, id: 244 },
+  { test: /finland/, id: 244 },
   { test: /\bmls\b/, id: 253 },
   { test: /botola|maroko|morocco/, id: 200 },
   { test: /liga mx|mexico/, id: 262 },
@@ -805,8 +845,15 @@ export const SIBLING_LEAGUES: Record<number, number[]> = {
   308: [307],
   203: [204],
   204: [203],
-  179: [183],
+  179: [180, 183],
+  180: [179],
   183: [179],
+  207: [208],
+  208: [207],
+  345: [346],
+  346: [345],
+  244: [245],
+  245: [244],
   388: [389],
   389: [388],
   106: [107],
@@ -863,6 +910,16 @@ const ID_TO_LEAGUE: Record<number, string> = {
   287: "Serbia Prva Liga",
   128: "Liga Profesional Argentina",
   129: "Primera Nacional",
+  207: "Swiss Super League",
+  208: "Swiss Challenge League",
+  345: "Czech First League",
+  346: "Czech FNL",
+  244: "Veikkausliiga",
+  245: "Ykkönen",
+  180: "Scottish Championship",
+  340: "V-League",
+  296: "Thai League 1",
+  368: "Singapore Premier League",
 };
 
 export function leagueIdFromHint(hint?: string): number | null {
@@ -873,11 +930,19 @@ export function leagueIdFromHint(hint?: string): number | null {
   if (/uzbek/.test(n)) return 369;
   if (/urugw|uruguay/.test(n)) return 268;
   if (/serb/.test(n)) return 286;
+  if (/challenge league/.test(n)) return 208;
+  if (/\bfnl\b|chl[- ]?fnl/.test(n)) return 346;
+  if (/ykkonen|ykkosliiga|ykkos/.test(n)) return 245;
+  if (/veikkaus/.test(n)) return 244;
   if (/calcutt|kolkata/.test(n)) return 1020;
   // Mizoram Premier League: brak id w API-Football. MUSI być przed katalogiem /premier league/ → 39.
   if (/\bmizoram\b|lawngtlai|lawtngtlai/.test(n)) return null;
   // Egipt Premier League: „Egipt - Premier League” / Egyptian… MUSI być przed /premier league/ → 39.
   if (/\begipt\b|\begypt\b|\begyptian\b/.test(n)) return 233;
+  if (/wietnam|\bvietnam\b|v[- ]?league/.test(n)) return 340;
+  if (/tajland|\bthailand\b|thai league/.test(n)) return 296;
+  if (/singapur|\bsingapore\b/.test(n)) return 368;
+  if (/\bi liga\b|fortuna 1 liga/.test(n) && !/rumun|romania/.test(n)) return 107;
   if (/\bnifl\b|northern ireland|irlandia polnoc|polnocn\w* irland/.test(n)) return 408;
   if (/(kazachstan|kazakhstan).*(first|1\s*(liga|league|division)|pervaya)|first.*(kazach|kazakh)/.test(n)) return 388;
   if (/kazachstan|kazakhstan/.test(n)) return 389;
@@ -894,6 +959,7 @@ export function leagueIdFromHint(hint?: string): number | null {
   if (/saudyjsk|\bsaudi\b|arabia saud/.test(`${n} ${hint}`.toLowerCase())) return 307;
   if (/(turcj|turkey|turkiye|t[uü]rkiye)/.test(n) && /1\.?\s*lig/.test(n) && !/super|s[uü]per/.test(n)) return 204;
   if (/tff\s*1/.test(n)) return 204;
+  if (/szkoc|scotland/.test(n) && /championship/.test(n)) return 180;
   if (/szkoc|scotland/.test(n)) return 179;
   if (/\bpremiership\b/.test(n) && !/north|irland|ireland|\bnifl\b/.test(n)) return 179;
   if (/(argentyn|argentina)/.test(`${n} ${hint}`.toLowerCase()) && /nacional/.test(`${n} ${hint}`.toLowerCase())) return 129;

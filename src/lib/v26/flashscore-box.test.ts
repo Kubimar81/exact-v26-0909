@@ -50,6 +50,24 @@ describe("Flashscore box — Calcutta Premier Division", () => {
       flashscoreLeaguePath("Colombia Primera A", "Patriotas Boyaca", "Barranquilla FC"),
       "/football/colombia/primera-b/",
     );
+    assert.equal(flashscoreLeaguePath("Ykkönen"), "/football/finland/ykkosliiga/");
+    assert.equal(flashscoreLeaguePath("Finlandia - Ykkösliiga"), "/football/finland/ykkosliiga/");
+    assert.equal(flashscoreLeaguePath("Czech FNL"), "/football/czech-republic/fnl/");
+    assert.equal(flashscoreLeaguePath("Czechy - FNL"), "/football/czech-republic/fnl/");
+    assert.equal(flashscoreLeaguePath("Swiss Challenge League"), "/football/switzerland/challenge-league/");
+    assert.equal(flashscoreLeaguePath("Szwajcaria - Challenge League"), "/football/switzerland/challenge-league/");
+    assert.equal(flashscoreLeaguePath("Veikkausliiga"), null);
+    assert.equal(flashscoreLeaguePath("Swiss Super League"), null);
+    assert.equal(flashscoreLeaguePath("Czech First League"), null);
+    assert.equal(flashscoreLeaguePath("I Liga"), "/football/poland/division-1/");
+    assert.equal(flashscoreLeaguePath("I Liga", "Polonia Warszawa", "Polonia Bytom"), "/football/poland/division-1/");
+    assert.equal(flashscoreLeaguePath("Ekstraklasa", "Polonia Warszawa", "Polonia Bytom"), "/football/poland/division-1/");
+    assert.equal(flashscoreLeaguePath("V-League"), "/football/vietnam/v-league-1/");
+    assert.equal(flashscoreLeaguePath("Wietnam - V-League 1"), "/football/vietnam/v-league-1/");
+    assert.equal(flashscoreLeaguePath("Thai League 1"), "/football/thailand/thai-league/");
+    assert.equal(flashscoreLeaguePath("Tajlandia - Thai League 1"), "/football/thailand/thai-league/");
+    assert.equal(flashscoreLeaguePath("Singapore Premier League"), "/football/singapore/premier-league/");
+    assert.equal(flashscoreLeaguePath("Premier League"), null);
   });
 
   it("SOT i rożne z SE÷Match, nie z 2. połowy", () => {

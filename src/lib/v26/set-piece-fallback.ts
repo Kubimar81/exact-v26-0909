@@ -99,7 +99,11 @@ export function sparseBoxLeague(league: string, home?: string, away?: string): b
   if (home && away) names.push(resolveLeague(home, away, league));
   return names.some((l) => {
     const n = fold(l);
-    return /superettan|obos|(1 division.*(norway|norweg))|((norway|norweg).*1 division)|primera nacional|calcutt|kolkata|mizoram|lawngtlai|lawtngtlai|kazachstan|kazakhstan|virsliga|cymru|\bwalia\b|\bwales\b|uganda|izrael|\bisrael\b|ligat|bosn|hercegowin|herzegovin|premijer|wwin|(saudi.*(division|first))|parva|efbet|(bu[lł]garia)|azerbejd|azerbaij|premyer|uzbek|urugw|uruguay|meistriliiga|premium liiga|\bestoni|(chile.*primera b|primera b.*chile|chile.*ascenso)|(colombia.*primera b|primera b.*colombia|kolumb.*primera b|torneo betplay)/.test(n);
+    if (/\bi liga\b/.test(n) && !/rumun|romania/.test(n)) return true;
+    if (/v[- ]?league|wietnam|\bvietnam\b/.test(n)) return true;
+    if (/thai league|tajland|\bthailand\b/.test(n)) return true;
+    if (/singapur|\bsingapore\b/.test(n)) return true;
+    return /superettan|obos|(1 division.*(norway|norweg))|((norway|norweg).*1 division)|primera nacional|calcutt|kolkata|mizoram|lawngtlai|lawtngtlai|kazachstan|kazakhstan|virsliga|cymru|\bwalia\b|\bwales\b|uganda|izrael|\bisrael\b|ligat|bosn|hercegowin|herzegovin|premijer|wwin|(saudi.*(division|first))|parva|efbet|(bu[lł]garia)|azerbejd|azerbaij|premyer|uzbek|urugw|uruguay|meistriliiga|premium liiga|\bestoni|(chile.*primera b|primera b.*chile|chile.*ascenso)|(colombia.*primera b|primera b.*colombia|kolumb.*primera b|torneo betplay)|ykkonen|ykkos|\bfnl\b|challenge league/.test(n);
   });
 }
 
@@ -114,6 +118,13 @@ function fotmobLeagueQuery(league: string): string {
   if (/parva|efbet|bu[lł]garia/.test(n)) return "First Professional League";
   if (/uzbek/.test(n)) return "Uzbekistan Super League";
   if (/urugw|uruguay/.test(n)) return "Liga AUF Uruguaya";
+  if (/ykkonen|ykkos/.test(n)) return "Ykkösliiga";
+  if (/\bfnl\b/.test(n)) return "FNL";
+  if (/challenge league/.test(n)) return "Challenge League";
+  if (/\bi liga\b|fortuna 1 liga/.test(n) && !/rumun|romania/.test(n)) return "I Liga";
+  if (/v[- ]?league|wietnam|\bvietnam\b/.test(n)) return "V-League";
+  if (/thai league|tajland|\bthailand\b/.test(n)) return "Thai League 1";
+  if (/singapur|\bsingapore\b/.test(n)) return "Singapore Premier League";
   if (/chile.*primera b|primera b.*chile|chile.*ascenso/.test(n)) return "Chile Primera B";
   if (/(colombia|kolumb).*primera b|primera b.*(colombia|kolumb)|torneo betplay/.test(n)) return "Colombia Primera B";
   if (/meistriliiga|premium liiga|\bestoni/.test(n)) return "Meistriliiga";
