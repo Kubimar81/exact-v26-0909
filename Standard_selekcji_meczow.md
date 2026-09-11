@@ -1,48 +1,88 @@
-# Standard selekcji meczów · V26 Liga
-Aktualizacja: 11.09.2026 (best-of 05.09 + rano 08.09). Silnik K0–K18 / TOP3 / CORE — HOLD.
+# Standard selekcji meczów — EXACT V26 Liga
 
-Wzorzec: **05.09** (10 HIT) i **rano 08.09** (9 HIT).
+Wersja: 11.09.2026 (best-of 05.09 + rano 08.09).
+Silnik K0–K18, CORE, TOP3: HOLD. Ten plik zmienia tylko sito operatora.
+
+Źródło: praktyka 05.09 (10 HIT) + sitko rana 08.09 (9 HIT). Conf nie tnie listy.
 
 ---
 
 ## Role
 
-Grok = Warstwa 1 (skan). Operator = Warstwa 2 (V26 w programie). Kupony Grok składa tylko na prośbę.
+- Warstwa 1 — skan rynku robi Grok według tego pliku. Lista do V26.
+- Warstwa 2 — pełne V26 K0–K18 robi operator w programie.
+- Kupony — Grok składa tylko gdy operator poprosi. Nie z palca, tylko z TOP3 karty.
 
 ---
 
 ## Warstwa 1 — lista dnia (przed V26)
 
-Jedna lista, bez ósemki vs Watch jako jakość.
+Jedna lista. Bez ósemki vs Watch jako jakość. Kolejność analizy, nie ranking:
 
-1. **Sitko 1.40–1.75** — najpierw te
-2. **Soft 1.70–2.10**
-3. **Short <1.40** — input, nie sitko kuponu
+1. Sitko 1.40–1.75 — najpierw te
+2. Soft 1.70–2.10
+3. Short <1.40 — input, nie sitko kuponu
 
-Wejście: liga krajowa (puchar OUT), jest faworyt 1X2.
-Wide >2.10 nie z rana. Nakładka 1.70–1.75 legalna.
+Warunki wejścia:
+- liga krajowa (nie puchar, nie LM/LE)
+- jest faworyt 1X2
+- pasmo kursu jak wyżej
 
-Zostają na liście: HV ligi, faworyt wyjazdowy, short jako input.
-Conf nie filtruje wejścia.
-Martwy underdog = kupon po K18, nie lista rana.
+Wide >2.10 — nie z porannej listy.
+Nakładka 1.70–1.75 jest legalna.
+
+Na listę zostają:
+- HV ligi (Cymru, Parva, NIFL, Super Liga — 05.09 wchodziły)
+- faworyt wyjazdowy (St. Mirren 1:2, Västerås 0:1 — 05.09 HIT)
+- short jako input (Dinamo 1.13, TNS 1.18, Haugesund 1.27, Larne 1.14)
+
+Conf / MIXED / skład nie filtrują wejścia.
+Martwy underdog nie jest warunkiem listy — to warunek kuponu po K18.
+
+### Short
+
+Na liście analizy jak 05.09 i 08.09.
+Na kupon tylko gdy karta sama da CORE 1:0 (Larne).
 
 ---
 
-## Warstwa 2 — dobór po K0–K18
+## Warstwa 2 — po pełnym V26 K0–K18
 
-Bierzesz **TOP3 z silnika**. Nic nie dopisujesz.
+Operator bierze TOP3 z programu. Nic nie dopisuje (ani 1:1, ani 2:0, ani 3:0).
+Nie łata slotów.
 
-Na dwójkę 2×2: tylko CORE **1:0 / 0:1**.
-1:1 / 0:0 / 1:2 / 2:1 = rozliczenie TOP3, nie forsuj.
-3:0 / 4:0 / 3:1 nie jako EPL1.
-Craiova / chaos poza dwójką.
-Short na kupon tylko gdy karta sama da 1:0.
+Na dwójkę 2×2 tylko gdy karta da CORE 1:0 albo 0:1.
 
-**Conf jest informacją, nie sitkiem.**
-Z archiwum 03–09.09: 42/51 HIT < 70. Całe 08.09 było 45.7–63.8.
+Zostaje na rozliczeniu TOP3, nie forsuj na dwójkę:
+- 1:1 / 0:0 / 1:2 / 2:1
+
+Nie jako EPL1:
+- 3:0 / 4:0 / 3:1
+
+Profil chaos (Craiova: 3:1 / 2:2 / 0:3) poza dwójką.
+Martwy underdog = sitko kuponu, nie listy.
+
+Dwa kupony po dwa.
+
+### Conf
+
+Conf jest na karcie jako informacja.
+Nie tnie listy.
+
+Z archiwum 03–09.09: 42/51 HIT < 70. Całe 08.09 (9 HIT) było 45.7–63.8.
+Bez XI program sam stawia Conf 69% / NO EXECUTION. To nie jest sitko rana.
 
 ---
 
 ## Czego nie ruszamy w programie
 
-Silnik HOLD. K0–K18, TOP3, CORE, Conf (liczba na karcie), sitko 1.40–1.75, Soft Band 1.70–2.10, guard EPL.
+- K0–K18
+- wzór Conf
+- układ TOP3
+- obowiązkowe 1:1 / 2:0 / 0:2 w TOP3 — nie wprowadzamy
+
+---
+
+## Test dnia
+
+Lista ma wyglądać jak 05.09 / rano 08.09: sitko H + Soft + short input. Ligi narodowe (także HV). Conf nie zamyka wrzutu.

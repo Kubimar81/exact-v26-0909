@@ -7,7 +7,9 @@ Stare `exact-v26` (backup 27.08) zostaje — nic tam nie kasuj.
 
 Dokument operatora: [STANDARD_SELEKCJI.md](STANDARD_SELEKCJI.md)
 
-Silnik K0–K18 HOLD. 1b OUT. Conf nie tnie kuponu.
+Nadpisany 11.09.2026 10:50 z pliku operatora. Silnik K0–K18 HOLD. 1b OUT. Conf nie tnie listy.
+
+UI: `src/routes/selekcja.tsx`
 
 ## Co wrzucić
 
